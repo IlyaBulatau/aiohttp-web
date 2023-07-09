@@ -5,8 +5,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
 class Database:
 
-    def __init__(self, application: web.Application, metadata):
-        self.metadata = metadata
+    def __init__(self, application: web.Application):
         self.server = application['config']['database_server']
         self.login = application['config']['database_login']
         self.password = application['config']['database_password']
@@ -16,25 +15,14 @@ class Database:
 
     def setup(self, application: web.Application):
         application.on_startup.append(self.create_database)
-        application.on_startup.append(self.create_models)
         application.on_cleanup.append()
 
-    def create_engine(self):
-        engine = create_async_engine(url=self.url, echo=True)
-        return engine
     
-    def session(self):
-        session_maker = async_sessionmaker(bind=self.create_engine())
-        return session_maker
-    
-
-    async def create_models(self):
-        async with self.create_engine().begin() as conn:
-            await conn.run_sync(self.metadata.create_all)
-
-
-    async def disconnect(self):
-        ...
+    async def session(self):
+        create_session = async_sessionmaker(bind=create_async_engine(url=self.url), autoflush=False, expire_on_commit=False)
+        async with create_session() as session:
+            return session
+        
 
     async def create_database(self):
         connect = await asyncpg.connect(database=self.server, 

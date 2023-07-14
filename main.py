@@ -7,7 +7,6 @@ from database.connect import Database
 from app import setup_routes
 from config.config import load_config
 
-
 def setup_templates(application: Application):
     """
     Задает путь к папке с html шаблонами

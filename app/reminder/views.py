@@ -1,12 +1,23 @@
 import aiohttp_jinja2
 from aiohttp import web
-from database.models import Reminder
+from aiohttp_security import is_anonymous, authorized_userid
 
+from sqlalchemy import select
+from database.models import Reminder
 from datetime import datetime
 
 
 @aiohttp_jinja2.template('index.html')
 async def index(request: web.Request):
+
+    # auth verification
+    user_id = await is_anonymous(request) 
+    if user_id:
+        print(f'User activate login in ID: {user_id}')
+        return web.HTTPFound('/login')
+    else:
+        print('User not authorizade', await authorized_userid(request))
+
     method = request.method.upper()
     db = request.app['db']
 
@@ -37,7 +48,7 @@ async def index(request: web.Request):
             return web.HTTPFound(location='/')
 
         # write in DB
-        reminder = Reminder(content=content, departure_date=datetime_departure, user_id=2)
+        reminder = Reminder(content=content, departure_date=datetime_departure, user_id=int(user_id))
         async with await db.session() as session:
             session.add(reminder)
             await session.commit()

@@ -4,7 +4,7 @@ import aiohttp_jinja2
 import jinja2
 
 from database.connect import Database
-from app import setup_routes
+from app import setup_routes, setup_seciruty
 from config.config import load_config
 
 def setup_templates(application: Application):
@@ -41,11 +41,13 @@ def setup_app(application: Application):
     setup_templates(application)
     setup_config(app, args.config)
     app['db'] = Database(app)
+    setup_seciruty(application)
 
 app = Application()
 args = parser_args()
 
-
 if __name__ == "__main__":
     setup_app(app)
     run_app(app, host=args.host, port=args.port)
+    
+ # TODO - сейчас данные авторизации хранятся как ключ приложения и при перезапуске не сохраняются, нужно перенести их в редис (aioredis)

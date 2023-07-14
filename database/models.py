@@ -1,5 +1,6 @@
 import sqlalchemy as orm
 from sqlalchemy.orm import relationship, declarative_base
+from sqlalchemy.sql import func  
 from database.connect import Database
 
 Base = declarative_base()

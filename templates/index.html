@@ -5,17 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ title }}</title>
-
-    <style>
-        body {
-            background: orange;
-        }
-
-        .element {
-            text-align: center;
-        }
-    </style>
-
+    <link href="{{ app.router.static.url_for(filename='style.css') }}" rel="stylesheet">
+    
 </head>
 <body>
     
@@ -24,7 +15,7 @@
 
 <div class="element">
 
-<form action="" method="post">
+<form action="/" method="post">
     <label for="reminder">Reminder text</label>
     <input type="text" name="reminder">
     <br>

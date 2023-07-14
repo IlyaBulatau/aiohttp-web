@@ -13,7 +13,7 @@ def setup_templates(application: Application):
     Задает путь к папке с html шаблонами
     """
     aiohttp_jinja2.setup(application, loader=jinja2.FileSystemLoader(searchpath='templates'))
-
+    application['static_root_url'] = '/static'
 
 
 def parser_args():
@@ -34,12 +34,12 @@ def setup_config(application: Application, config: dict):
     application['config'] = load_config(config)
     
 
-def setup_app(aplication: Application):
+def setup_app(application: Application):
     """
     Настраивает приложения
     """
-    setup_routes(aplication)
-    setup_templates(aplication)
+    setup_routes(application)
+    setup_templates(application)
     setup_config(app, args.config)
     app['db'] = Database(app)
 

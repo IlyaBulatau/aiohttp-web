@@ -10,5 +10,6 @@ def setup_routes(application: web.Application):
     application.router.add_post('/login', views_auth.login)
     application.router.add_get('/signup', views_auth.signup)
     application.router.add_post('/signup', views_auth.signup)
+    application.router.add_get('/logout', views_auth.logout)
 
     application.router.add_static(prefix='/static', path='static/css', name='static')

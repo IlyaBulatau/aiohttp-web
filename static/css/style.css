@@ -5,3 +5,7 @@ body {
 .element {
     text-align: center;
 }
+
+.logout {
+    text-align: right;
+}

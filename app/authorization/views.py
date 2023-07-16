@@ -1,4 +1,4 @@
-from aiohttp_security import remember
+from aiohttp_security import remember, forget
 from aiohttp import web
 import aiohttp_jinja2
 
@@ -48,7 +48,7 @@ async def login(request: web.Request):
 async def signup(request: web.Request):
     method = request.method.upper()
     db = request.app['db']
-
+    
     if method == 'GET':
         return {'title': 'SignUp', 'header': 'SignUp Page'}
 
@@ -83,4 +83,5 @@ async def signup(request: web.Request):
         return web.HTTPFound('/login')
 
 async def logout(request):
-    ...
+    await forget(request, None)
+    return web.HTTPFound('/login')

@@ -35,7 +35,7 @@ async def login(request: web.Request):
                 print('Incorrect password')
                 return web.HTTPFound('/login')
 
-            print(user.email)
+            print('Login', user.email)
             await remember(request, web.HTTPFound('/'), str(user.id))
             return web.HTTPFound(location='/')
         else:
@@ -83,5 +83,5 @@ async def signup(request: web.Request):
         return web.HTTPFound('/login')
 
 async def logout(request):
-    await forget(request, None)
+    await forget(request, web.HTTPFound('/'))
     return web.HTTPFound('/login')

@@ -11,7 +11,7 @@ from datetime import datetime
 async def index(request: web.Request):
 
     # auth verification
-    user_is_anonymous= await is_anonymous(request) 
+    user_is_anonymous = await is_anonymous(request) 
     # if user is anonymous - not auth
     if user_is_anonymous:
         print('User not authorizade')

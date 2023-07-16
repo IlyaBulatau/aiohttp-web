@@ -4,6 +4,7 @@ import aiohttp_jinja2
 
 from database.models import User
 from sqlalchemy import select
+from utils.validaters import auth_verification
 
 import jwt
 
@@ -82,6 +83,7 @@ async def signup(request: web.Request):
             await session.commit()
         return web.HTTPFound('/login')
 
+@auth_verification
 async def logout(request):
     await forget(request, web.HTTPFound('/'))
     return web.HTTPFound('/login')

@@ -1,4 +1,4 @@
-from aiohttp_security import setup, AbstractAuthorizationPolicy, AbstractIdentityPolicy, SessionIdentityPolicy
+from aiohttp_security import setup, AbstractAuthorizationPolicy, SessionIdentityPolicy
 from aiohttp import web
 from database.models import User
 from aiohttp_session import get_session

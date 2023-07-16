@@ -2,10 +2,10 @@ import sqlalchemy as orm
 from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy.sql import func  
 
-import jwt
+from argon2 import PasswordHasher
 
 Base = declarative_base()
-
+ph = PasswordHasher()
 
 class User(Base):
     __tablename__ = 'users'
@@ -20,7 +20,7 @@ class User(Base):
     def __init__(self, **kwargs):
         self.username = kwargs.get('username')
         self.email = kwargs.get('email')
-        self.password = jwt.encode(payload={'password': kwargs.get('password')}, key='password', algorithm='HS256')
+        self.password = ph.hash(kwargs.get('password'))
         
 
 class Reminder(Base):

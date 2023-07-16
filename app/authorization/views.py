@@ -6,7 +6,7 @@ from database.models import User
 from sqlalchemy import select
 from utils.validaters import auth_verification
 
-import jwt
+from argon2 import PasswordHasher
 
 @aiohttp_jinja2.template('login.html')
 async def login(request: web.Request):
@@ -21,28 +21,33 @@ async def login(request: web.Request):
         email = form_data.get('email')
         password = form_data.get('password')
 
+        # if data empty
         if email == '' or password == '':
             print('Empty Data')
             return web.HTTPFound('/login')
-
+        #get user by email
         async with await db.session() as session:
             query = select(User).filter(User.email == email)
             search = await session.execute(query)
             user = search.scalars().first()
 
-
+        # if user search
         if user:
-            if jwt.decode(user.password, 'password', 'HS256').get('password') != password:
+            ph = PasswordHasher() # password hash object
+            try:
+                if ph.verify(user.password, password):
+                    print('Login', user.email)
+                    await remember(request, web.HTTPFound('/'), str(user.id))
+                    return web.HTTPFound(location='/')
+            except:
                 print('Incorrect password')
                 return web.HTTPFound('/login')
-
-            print('Login', user.email)
-            await remember(request, web.HTTPFound('/'), str(user.id))
-            return web.HTTPFound(location='/')
+            
+        # if user not found
         else:
             print('user not found')
             return web.HTTPFound(location='/login')
-        
+
 
 
 @aiohttp_jinja2.template('signup.html')

@@ -5,6 +5,7 @@ import aiohttp_jinja2
 from database.models import User
 from sqlalchemy import select
 from utils.validaters import auth_verification
+from utils.log import log
 
 from argon2 import PasswordHasher
 
@@ -23,8 +24,9 @@ async def login(request: web.Request):
 
         # if data empty
         if email == '' or password == '':
-            print('Empty Data')
+            log.warning('Empty Data')
             return web.HTTPFound('/login')
+        
         #get user by email
         async with await db.session() as session:
             query = select(User).filter(User.email == email)
@@ -36,16 +38,16 @@ async def login(request: web.Request):
             ph = PasswordHasher() # password hash object
             try:
                 if ph.verify(user.password, password):
-                    print('Login', user.email)
+                    log.warning(f'Login {user.email}')
                     await remember(request, web.HTTPFound('/'), str(user.id))
                     return web.HTTPFound(location='/')
             except:
-                print('Incorrect password')
+                log.warning('Incorrect password')
                 return web.HTTPFound('/login')
             
         # if user not found
         else:
-            print('user not found')
+            log.warning('user not found')
             return web.HTTPFound(location='/login')
 
 
@@ -63,11 +65,10 @@ async def signup(request: web.Request):
         username = form_data.get('username')
         email = form_data.get('email')
         password = form_data.get('password')
-        print(password)
 
         # validating data
         if username == '' or email == '' or password == '':
-            print('Not valid data')
+            log.warning('Not valid data')
             return web.HTTPFound('/signup')
 
         # seacrh user with this is email
@@ -79,13 +80,18 @@ async def signup(request: web.Request):
         
         # if has user
         if user:
-            print('This is email is exist')
+            log.warning('This is email is exist')
             return web.HTTPFound('/signup')
                 
         async with await db.session() as session:
             user = User(username=username, email=email, password=password)
-            session.add(user)
-            await session.commit()
+            try:
+                session.add(user)
+                await session.commit()
+            except:
+                await session.rollback()
+                log.critical('DB ERROR USER NOT COMMIT')
+
         return web.HTTPFound('/login')
 
 @auth_verification

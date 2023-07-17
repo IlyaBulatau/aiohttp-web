@@ -9,6 +9,7 @@ from aiohttp_session.redis_storage import RedisStorage
 from database.connect import Database
 from app import setup_routes, setup_seciruty
 from config.config import load_config
+from utils.log import log
 
 def setup_templates(application: Application):
     """
@@ -53,7 +54,9 @@ args = parser_args()
 
 if __name__ == "__main__":
     setup_app(app)
+    log.warning('RUN SERVER')
     run_app(app, host=args.host, port=args.port)
+    log.warning('STOP SERVER')
 
  # TODO - настроить сессии что бы могли ондновременно существовать несколько юзеров
  # TODO - привести в порядок маршрутизацию, сделать правильные редиректы
@@ -62,3 +65,4 @@ if __name__ == "__main__":
  # TODO - добавить pydantic для валидации данных плученных с html формы 
  # TODO - обрабатывать исключения и не валидные данные введенные в форме либо в строке поиска
  # TODO - добавить селери для отправки напоминаний на почту
+ # TODO - добавить логгирование

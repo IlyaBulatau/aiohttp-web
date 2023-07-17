@@ -6,28 +6,29 @@ from utils.log import log
 from utils.validaters import auth_verification
 from database.models import Reminder
 from datetime import datetime
+from database.connect import Database
 
 
 @aiohttp_jinja2.template('index.html')
 @auth_verification
 async def index(request: web.Request):
 
-    user_id = await authorized_userid(request)
+    user_id: int = await authorized_userid(request)
     log.warning(f'User activate login in ID: {user_id}')
-
-    method = request.method.upper()
-    db = request.app['db']
+    
+    method: str = request.method.upper()
+    db: Database = request.app['db']
 
     if method == 'GET':
         return {'text': 'Main Page', 'title': 'Reminder'}
 
     elif method == 'POST':
-        responce = await request.post()
+        responce: dict = await request.post()
 
         # get data
-        content = responce.get('reminder')
-        date_departure = responce.get('calendar')
-        time_departure = responce.get('time')
+        content: str = responce.get('reminder')
+        date_departure: str = responce.get('calendar')
+        time_departure: str = responce.get('time')
 
         # validate dataset
         if content == ''\

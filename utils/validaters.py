@@ -1,8 +1,9 @@
 from aiohttp.web import HTTPFound, Request
 from aiohttp_security import is_anonymous
 import functools
+from typing import Callable
 
-def auth_verification(func):
+def auth_verification(func: Callable):
     """
     For check auth user
     if user not auth - redirect /login page
@@ -12,7 +13,7 @@ def auth_verification(func):
     @functools.wraps(func)
     async def wrapper(*args, **kwargs):
         request: Request = args[0]
-        anonymous = await is_anonymous(request)
+        anonymous: int = await is_anonymous(request)
 
         if anonymous:
             print('User not authorizade')
@@ -21,4 +22,3 @@ def auth_verification(func):
         return await func(*args, **kwargs)
     
     return wrapper
-

@@ -1,7 +1,6 @@
 from aiohttp_security import setup, AbstractAuthorizationPolicy, SessionIdentityPolicy
 from aiohttp import web
 from database.models import User
-from aiohttp_session import get_session
 
 KEY = 'security'
 
@@ -17,7 +16,7 @@ class AuthorizationPolicy(AbstractAuthorizationPolicy):
         Return User ID
         """
     
-        return identity    
+        return identity
     
         
 def setup_seciruty(app: web.Application):

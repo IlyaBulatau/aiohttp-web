@@ -5,6 +5,8 @@ import jinja2
 import aioredis
 import aiohttp_session as AS
 from aiohttp_session.redis_storage import RedisStorage
+from aiohttp_session.cookie_storage import EncryptedCookieStorage
+from cryptography import fernet
 
 from database.connect import Database
 from app import setup_routes, setup_seciruty
@@ -36,6 +38,10 @@ def setup_config(application: Application, config: dict):
     """
     application['config'] = load_config(config)
     
+def setup_storage(application):
+    # key = secret_key=fernet.Fernet.generate_key()
+    # AS.setup(application, EncryptedCookieStorage(fernet.Fernet(key=key)))
+    AS.setup(application, RedisStorage(application['cache']))
 
 def setup_app(application: Application):
     """
@@ -46,7 +52,7 @@ def setup_app(application: Application):
     setup_config(app, args.config)
     app['cache'] = aioredis.from_url(f'redis://{app["config"]["redis_host"]}', encoding='utf-8', decode_responses=True)
     app['db'] = Database(app)
-    AS.setup(app, RedisStorage(app['cache']))
+    setup_storage(application)
     setup_seciruty(application)
     
 app = Application()
@@ -57,12 +63,14 @@ if __name__ == "__main__":
     log.warning('RUN SERVER')
     run_app(app, host=args.host, port=args.port)
     log.warning('STOP SERVER')
+    
 
  # TODO - настроить сессии что бы могли ондновременно существовать несколько юзеров
  # TODO - привести в порядок маршрутизацию, сделать правильные редиректы
  # (условно после создания напоминания юзер должен перенапрявлятся на страницу с эти напоминанием)
+
  # TODO - отрефакторить шалоны, сделать 1 базовый, переписать ссылку на абстрактные, а не прямые
  # TODO - добавить pydantic для валидации данных плученных с html формы 
  # TODO - обрабатывать исключения и не валидные данные введенные в форме либо в строке поиска
  # TODO - добавить селери для отправки напоминаний на почту
- # TODO - добавить логгирование
+ 

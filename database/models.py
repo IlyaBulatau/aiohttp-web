@@ -7,14 +7,18 @@ from argon2 import PasswordHasher
 Base = declarative_base()
 ph = PasswordHasher()
 
-class User(Base):
-    __tablename__ = 'users'
+class BaseModel(Base):
+    __abstract__ = True
 
     id = orm.Column(orm.Integer(), primary_key=True)
+    create_time = orm.Column(orm.DateTime(), server_default=func.now())
+
+class User(BaseModel):
+    __tablename__ = 'users'
+
     username = orm.Column(orm.String(), nullable=False)
     email = orm.Column(orm.String(), nullable=False)
     password = orm.Column(orm.String(), nullable=False)
-    create_time = orm.Column(orm.DateTime(), server_default=func.now())
     reminder = relationship('Reminder', backref='user')
 
     def __init__(self, **kwargs):
@@ -23,13 +27,11 @@ class User(Base):
         self.password = ph.hash(kwargs.get('password'))
         
 
-class Reminder(Base):
+class Reminder(BaseModel):
     __tablename__ = 'reminders'
 
-    id = orm.Column(orm.Integer(), primary_key=True)
     content = orm.Column(orm.String(), nullable=False)
     departure_date = orm.Column(orm.DateTime(), nullable=False)
-    create_time = orm.Column(orm.DateTime(), server_default=func.now())
     user_id = orm.Column(orm.Integer(), orm.ForeignKey('users.id'))
 
 

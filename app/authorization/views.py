@@ -1,8 +1,9 @@
-from aiohttp_security import remember, forget
+from aiohttp_security import remember, forget, is_anonymous
 from aiohttp import web
 import aiohttp_jinja2
 
 from database.models import User
+from database.connect import Database
 from sqlalchemy import select
 from utils.validaters import auth_verification
 from utils.log import log
@@ -11,14 +12,19 @@ from argon2 import PasswordHasher
 
 @aiohttp_jinja2.template('login.html')
 async def login(request: web.Request):
-    method = request.method.upper()
-    db = request.app['db']
+    # user auth redirect "/" page 
+    if not await is_anonymous(request):
+        return web.HTTPFound('/')
+    
+    method: str = request.method.upper()
+    db: Database = request.app['db']
+    
 
     if method == 'GET':
         return {'title': 'Login', 'header': 'Login Page'}
     
     elif method == 'POST':
-        form_data = await request.post()
+        form_data: dict = await request.post()
         email = form_data.get('email')
         password = form_data.get('password')
 
@@ -54,14 +60,14 @@ async def login(request: web.Request):
 
 @aiohttp_jinja2.template('signup.html')
 async def signup(request: web.Request):
-    method = request.method.upper()
-    db = request.app['db']
+    method: str = request.method.upper()
+    db: Database = request.app['db']
     
     if method == 'GET':
         return {'title': 'SignUp', 'header': 'SignUp Page'}
 
     elif method == 'POST':
-        form_data = await request.post()
+        form_data: dict = await request.post()
         username = form_data.get('username')
         email = form_data.get('email')
         password = form_data.get('password')
@@ -86,6 +92,7 @@ async def signup(request: web.Request):
         async with await db.session() as session:
             user = User(username=username, email=email, password=password)
             try:
+                log.critical(f'ADD NEW USER WITH EMAIL {user.email}')
                 session.add(user)
                 await session.commit()
             except:

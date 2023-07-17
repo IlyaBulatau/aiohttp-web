@@ -2,8 +2,8 @@ import aiohttp_jinja2
 from aiohttp import web
 from aiohttp_security import authorized_userid
 
-from utils.log import log
-from utils.validaters import auth_verification
+from utils import log
+from utils import auth_verification
 from database.models import Reminder
 from datetime import datetime
 from database.connect import Database
@@ -49,10 +49,11 @@ async def index(request: web.Request):
         reminder = Reminder(content=content, departure_date=datetime_departure, user_id=int(user_id))
         async with await db.session() as session:
             try:
+                log.critical(f'CREATE REMINDER IN DB WITH CONTENT {content}')
                 session.add(reminder)
                 await session.commit()
             except:
                 log.critical('DB ERROR, REMINDER NOT COMMIT')
                 await session.rollback()
-        log.warning(content)        
+                
         return web.HTTPFound(location='/')

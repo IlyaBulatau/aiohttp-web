@@ -5,13 +5,13 @@ import aiohttp_jinja2
 from database.models import User
 from database.connect import Database
 from sqlalchemy import select
-from utils.validaters import auth_verification
-from utils.log import log
+from utils import auth_verification, log, UserSignUpForm
 
 from argon2 import PasswordHasher
 
 @aiohttp_jinja2.template('login.html')
 async def login(request: web.Request):
+    
     # user auth redirect "/" page 
     if not await is_anonymous(request):
         return web.HTTPFound('/')
@@ -19,7 +19,6 @@ async def login(request: web.Request):
     method: str = request.method.upper()
     db: Database = request.app['db']
     
-
     if method == 'GET':
         return {'title': 'Login', 'header': 'Login Page'}
     
@@ -73,10 +72,11 @@ async def signup(request: web.Request):
         password = form_data.get('password')
 
         # validating data
-        if username == '' or email == '' or password == '':
-            log.warning('Not valid data')
+        try:
+            UserSignUpForm(username=username, email=email, password=password)
+        except:
             return web.HTTPFound('/signup')
-
+        
         # seacrh user with this is email
         async with await db.session() as session:
             query = select(User).filter(User.email == email)

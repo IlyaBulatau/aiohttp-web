@@ -5,13 +5,11 @@ import jinja2
 import aioredis
 import aiohttp_session as AS
 from aiohttp_session.redis_storage import RedisStorage
-from aiohttp_session.cookie_storage import EncryptedCookieStorage
-from cryptography import fernet
 
 from database.connect import Database
 from app import setup_routes, setup_seciruty
 from config.config import load_config
-from utils.log import log
+from utils import log
 
 def setup_templates(application: Application):
     """
@@ -39,8 +37,6 @@ def setup_config(application: Application, config: dict):
     application['config'] = load_config(config)
     
 def setup_storage(application):
-    # key = secret_key=fernet.Fernet.generate_key()
-    # AS.setup(application, EncryptedCookieStorage(fernet.Fernet(key=key)))
     AS.setup(application, RedisStorage(application['cache']))
 
 def setup_app(application: Application):
@@ -71,6 +67,7 @@ if __name__ == "__main__":
 
  # TODO - отрефакторить шалоны, сделать 1 базовый, переписать ссылку на абстрактные, а не прямые
  # TODO - добавить pydantic для валидации данных плученных с html формы 
- # TODO - обрабатывать исключения и не валидные данные введенные в форме либо в строке поиска
+ # TODO - обрабатывать исключения и не валидные данные введенные в форме либо в строке поиска и отправлять юзеру текст ошибки в html шаблонах
+ # TODO -  сделать собстевнные классы ошибок, например при длинне пароля менее 8 - PasswordLenExeption
  # TODO - добавить селери для отправки напоминаний на почту
  

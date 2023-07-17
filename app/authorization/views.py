@@ -5,13 +5,13 @@ import aiohttp_jinja2
 from database.models import User
 from database.connect import Database
 from sqlalchemy import select
-from utils import auth_verification, log, UserSignUpForm
+from utils import auth_verification, log, UserSignUpForm, UserLoginForm
 
 from argon2 import PasswordHasher
 
 @aiohttp_jinja2.template('login.html')
 async def login(request: web.Request):
-    
+
     # user auth redirect "/" page 
     if not await is_anonymous(request):
         return web.HTTPFound('/')
@@ -27,9 +27,10 @@ async def login(request: web.Request):
         email = form_data.get('email')
         password = form_data.get('password')
 
-        # if data empty
-        if email == '' or password == '':
-            log.warning('Empty Data')
+        # validate data
+        try:
+            UserLoginForm(email=email, password=password)
+        except:
             return web.HTTPFound('/login')
         
         #get user by email

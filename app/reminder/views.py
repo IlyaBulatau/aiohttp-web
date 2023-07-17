@@ -2,8 +2,7 @@ import aiohttp_jinja2
 from aiohttp import web
 from aiohttp_security import authorized_userid
 
-from utils import log
-from utils import auth_verification
+from utils import auth_verification, log, ReminderSaveForm
 from database.models import Reminder
 from datetime import datetime
 from database.connect import Database
@@ -29,29 +28,21 @@ async def index(request: web.Request):
         content: str = responce.get('reminder')
         date_departure: str = responce.get('calendar')
         time_departure: str = responce.get('time')
-
-        # validate dataset
-        if content == ''\
-        or date_departure == ''\
-        or time_departure == '':
-            log.warning('Empty Data')
-            return web.HTTPFound(location='/')
         
-        # time passed
-        datetime_departure = datetime.strptime(date_departure+'/'+time_departure, '%Y-%m-%d/%H:%M')
-
-        # validate time passed
-        if datetime_departure < datetime.now():
-            log.warning('Time has passed')
-            return web.HTTPFound(location='/')
-
+        # validate dataset
+        try:
+            ReminderSaveForm(content=content, date_departure=date_departure, time_departure=time_departure)
+            datetime_departure = datetime.strptime(date_departure+'/'+time_departure, '%Y-%m-%d/%H:%M')
+        except:
+            return web.HTTPFound('/')
+        
         # write in DB
         reminder = Reminder(content=content, departure_date=datetime_departure, user_id=int(user_id))
         async with await db.session() as session:
             try:
-                log.critical(f'CREATE REMINDER IN DB WITH CONTENT {content}')
                 session.add(reminder)
                 await session.commit()
+                log.critical(f'CREATE REMINDER IN DB WITH CONTENT {content}')
             except:
                 log.critical('DB ERROR, REMINDER NOT COMMIT')
                 await session.rollback()

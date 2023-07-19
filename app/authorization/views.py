@@ -6,6 +6,17 @@ from database.models import User
 from database.connect import Database
 from sqlalchemy import select
 from utils import auth_verification, log, UserSignUpForm, UserLoginForm
+from app.exeption.values_exeption import (EmptyDataExeption, 
+                                          TimePassedExeption,
+                                          PasswordLenghtExeption,
+                                          PasswordLetterExeption,
+                                          PasswordNotHaveDigit,
+                                          PasswordSpaceExeption,
+                                          PasswordStrExeption,
+                                          UsernameHavePunctuationsExeption,
+                                          UsernameLenghtExeption,
+                                          UsernameSpaceExeption,
+                                          UsernameStrExeption)
 
 from argon2 import PasswordHasher
 
@@ -30,7 +41,8 @@ async def login(request: web.Request):
         # validate data
         try:
             UserLoginForm(email=email, password=password)
-        except:
+        except PasswordLenghtExeption as e:
+            #return aiohttp_jinja2.render_template('login.html', request, context={'password_error': 'passport lenght need be more 8 symbols'}, status=301)
             return web.HTTPFound('/login')
         
         #get user by email
@@ -73,10 +85,10 @@ async def signup(request: web.Request):
         password = form_data.get('password')
 
         # validating data
-        try:
-            UserSignUpForm(username=username, email=email, password=password)
-        except:
-            return web.HTTPFound('/signup')
+        # try:
+        UserSignUpForm(username=username, email=email, password=password)
+        # except:
+        #     return web.HTTPFound('/signup')
         
         # seacrh user with this is email
         async with await db.session() as session:

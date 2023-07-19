@@ -3,7 +3,20 @@ from email_validator import validate_email
 from utils import log
 from string import digits, ascii_lowercase, punctuation
 from datetime import datetime
-
+from app.exeption.values_exeption import (PasswordStrExeption, 
+                                          PasswordLenghtExeption, 
+                                          PasswordNotHaveDigit, 
+                                          PasswordLetterExeption, 
+                                          PasswordSpaceExeption
+                                          ,UsernameHavePunctuationsExeption,
+                                          UsernameLenghtExeption,
+                                          UsernameSpaceExeption,
+                                          UsernameStrExeption,
+                                          ContentLenghtExeption,
+                                          ContentSpaceExeption,
+                                          ContentStrExeption,
+                                          EmptyDataExeption,
+                                          TimePassedExeption)
 
 class UserLoginForm(pydantic.BaseModel):
     email: str
@@ -25,18 +38,19 @@ class UserLoginForm(pydantic.BaseModel):
     def password_validator(cls, password):
         if not isinstance(password, str):
             log.warning('PASSWORD NOT STR TYPE')
-            raise AttributeError
+            raise PasswordStrExeption()
         if len(password) < 8:
             log.warning('PASSWORD IS LESS 8 LENGHT')
+            raise PasswordLenghtExeption()
         if not set(password).intersection(digits):
             log.warning('PASSWORD NOT HAVE  DIGIT')
-            raise TypeError
+            raise PasswordNotHaveDigit()
         if set(password).intersection(' '):
             log.warning('PASSWORD HAVE SPACE ERROR')
-            raise SyntaxError
+            raise PasswordSpaceExeption()
         if len(set(password).intersection(ascii_lowercase)) < 4:
-            log.warning('PASSWORD HAVE LESS 6 DIFFERENT LOWERCASE LETTER')
-            raise SyntaxError
+            log.warning('PASSWORD HAVE LESS 4 DIFFERENT LOWERCASE LETTER')
+            raise PasswordLetterExeption()
 
         return password
 
@@ -49,16 +63,16 @@ class UserSignUpForm(UserLoginForm):
     def username_verificat(cls, username):
         if not isinstance(username, str):
             log.warning('USERNAME NOT STR TYPE')
-            raise TypeError
+            raise UsernameStrExeption()
         if set(username).intersection(punctuation):
             log.warning('USERNAME HAVE PUNCTUANIONS - ERROR')
-            raise SyntaxError
+            raise UsernameHavePunctuationsExeption()
         if set(username).intersection(' '):
             log.warning('USERNAME HAVE SPACE ERROR')
-            raise SyntaxError
+            raise UsernameSpaceExeption()
         if len(username) < 2:
             log.warning('USERNAME IS SMALL LENGHT')
-            raise AttributeError
+            raise UsernameLenghtExeption()
         
         return username
 
@@ -73,14 +87,14 @@ class ReminderSaveForm(pydantic.BaseModel):
     def content_validator(cls, content):
         if not isinstance(content, str):
             log.warning('CONTENT IS NOT STRING TYPE')
-            raise TypeError
+            raise ContentStrExeption()
         if len(content) < 6:
             log.warning('CONTETN LESS 20 LENGHT')
-            raise SyntaxError
+            raise ContentLenghtExeption()
         if ((content.count(' ') // len(content)) * 100) > 30:
             #percentage of space and letter
             log.warning('MORE SPACE AND LESS LETTER') 
-            raise SyntaxError
+            raise ContentSpaceExeption()
         return content
     
     @pydantic.root_validator(pre=True)
@@ -90,10 +104,10 @@ class ReminderSaveForm(pydantic.BaseModel):
         time_departure = args['time_departure']
         if date_departure == '' or time_departure == '':
             log.warning('EMPTY DATATIME')
-            raise AttributeError
+            raise EmptyDataExeption()
         datetime_departure = datetime.strptime(date_departure+'/'+time_departure, '%Y-%m-%d/%H:%M')  
 
         if datetime_departure < datetime.now():
             log.warning('Time has passed')
-            raise SyntaxError
+            raise TimePassedExeption()
         return args

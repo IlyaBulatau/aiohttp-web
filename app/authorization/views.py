@@ -22,6 +22,7 @@ from argon2 import PasswordHasher
 
 @aiohttp_jinja2.template('login.html')
 async def login(request: web.Request):
+    KEYS = {'title': 'Login', 'header': 'Login Page', 'password_error': None}
 
     # user auth redirect "/" page 
     if not await is_anonymous(request):
@@ -31,7 +32,7 @@ async def login(request: web.Request):
     db: Database = request.app['db']
     
     if method == 'GET':
-        return {'title': 'Login', 'header': 'Login Page'}
+        return KEYS
     
     elif method == 'POST':
         form_data: dict = await request.post()
@@ -41,9 +42,23 @@ async def login(request: web.Request):
         # validate data
         try:
             UserLoginForm(email=email, password=password)
-        except PasswordLenghtExeption as e:
-            #return aiohttp_jinja2.render_template('login.html', request, context={'password_error': 'passport lenght need be more 8 symbols'}, status=301)
-            return web.HTTPFound('/login')
+        except PasswordLenghtExeption:
+            KEYS['password_error'] = 'passport lenght need be more 8 symbols'
+            return aiohttp_jinja2.render_template('login.html', request, context=KEYS)
+        except PasswordLetterExeption:
+            KEYS['password_error'] = 'password must contain at least 4 different English letters'
+            return aiohttp_jinja2.render_template('login.html', request, context=KEYS)
+        except PasswordNotHaveDigit:
+            KEYS['password_error'] = 'password most be contain digit'
+            return aiohttp_jinja2.render_template('login.html', request, context=KEYS)
+        except PasswordSpaceExeption:
+            KEYS['password_error'] = 'password most be not have space'
+            return aiohttp_jinja2.render_template('login.html', request, context=KEYS)
+        except PasswordStrExeption:
+            KEYS['password_error'] = 'you password empty or dont have letter'
+            return aiohttp_jinja2.render_template('login.html', request, context=KEYS)
+
+            
         
         #get user by email
         async with await db.session() as session:

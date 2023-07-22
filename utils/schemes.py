@@ -1,5 +1,5 @@
 import pydantic
-from email_validator import validate_email
+from email_validator import validate_email, exceptions_types
 from utils import log
 from string import digits, ascii_lowercase, punctuation
 from datetime import datetime
@@ -18,6 +18,7 @@ from app.exeption.values_exeption import (PasswordStrExeption,
                                           EmptyDataExeption,
                                           TimePassedExeption)
 
+
 class UserLoginForm(pydantic.BaseModel):
     email: str
     password: str
@@ -29,7 +30,8 @@ class UserLoginForm(pydantic.BaseModel):
             validate_email(email=email)
         except:
             log.warning('EMAIL NOT VALID')
-            raise SyntaxError
+            raise exceptions_types.EmailNotValidError()
+            
         
         return email
     
@@ -88,8 +90,8 @@ class ReminderSaveForm(pydantic.BaseModel):
         if not isinstance(content, str):
             log.warning('CONTENT IS NOT STRING TYPE')
             raise ContentStrExeption()
-        if len(content) < 6:
-            log.warning('CONTETN LESS 20 LENGHT')
+        if len(content) < 8:
+            log.warning('CONTETN LESS 8 LENGHT')
             raise ContentLenghtExeption()
         if ((content.count(' ') // len(content)) * 100) > 30:
             #percentage of space and letter

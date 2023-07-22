@@ -29,6 +29,10 @@
     <br><br><br>
 
     <input type="submit">
+    {% if reminder_error %}
+    <p>{{ reminder_error }}</p>
+    {% endif %}
+
 
 </form>
 

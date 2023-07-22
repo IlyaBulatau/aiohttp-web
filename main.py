@@ -7,7 +7,7 @@ import aiohttp_session as AS
 from aiohttp_session.redis_storage import RedisStorage
 
 from database.connect import Database
-from app import setup_routes, setup_seciruty
+from app import setup_routes, setup_seciruty, error_middleware
 from config.config import load_config
 from utils import log
 
@@ -51,7 +51,7 @@ def setup_app(application: Application):
     setup_storage(application)
     setup_seciruty(application)
     
-app = Application()
+app = Application(middlewares=[error_middleware])
 args = parser_args()
 
 if __name__ == "__main__":
@@ -62,10 +62,8 @@ if __name__ == "__main__":
     
 
  # TODO - настроить сессии что бы могли ондновременно существовать несколько юзеров
- # TODO - привести в порядок маршрутизацию, сделать правильные редиректы
- # (условно после создания напоминания юзер должен перенапрявлятся на страницу с эти напоминанием)
-
+ 
  # TODO - отрефакторить шалоны, сделать 1 базовый, переписать ссылку на абстрактные, а не прямые
  # TODO - добавить селери для отправки напоминаний на почту
- # TODO - доделать ошибки обрабатывающие не валидные данные с форм и сделать обработку http ошибок
+ # TODO - сделать обработку http ошибок
  

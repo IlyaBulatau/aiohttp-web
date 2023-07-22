@@ -18,7 +18,7 @@ async def error_middleware(request: web.Request, handler):
         elif status_code == 408:
             message = 'Timeout Request, check you connect with Internet'
 
-        elif status_code == 501:
+        elif int(str(status_code)[0]) == 5:
             message = 'Sorry, we trash, pls try to comeback later'
         return aiohttp_jinja2.render_template('error.html', request, context={'status':status_code, 'message': message})    
 

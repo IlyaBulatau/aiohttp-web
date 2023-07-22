@@ -1,15 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
-    <link href="{{ app.router.static.url_for(filename='style.css') }}" rel="stylesheet">
-    
-</head>
-<body>
-    
+{% extends 'base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
 <h1 class="element">{{ header }}</h1>
 <br><br><br>
 
@@ -35,8 +30,6 @@
 
     </form>
     <br><br><br><br><br>
-    <h3><a href="/signup">SignUp</a></h3>
+    <h3><a href="{{ app.router.get('signup').url_for() }}">SignUp</a></h3>
 </div>
-
-</body>
-</html>
+{% endblock %}

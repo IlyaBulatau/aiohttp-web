@@ -8,6 +8,7 @@ from datetime import datetime
 from database.connect import Database
 from app.exeption.processing import error_controller
 
+
 @aiohttp_jinja2.template('index.html')
 @error_controller(template_name='index.html', title='Reminder', header='Main Page')
 @auth_verification
@@ -41,9 +42,9 @@ async def index(request: web.Request):
                 session.add(reminder)
                 await session.commit()
                 log.critical(f'CREATE REMINDER IN DB WITH CONTENT {content}')
-            except:
-                log.critical('DB ERROR, REMINDER NOT COMMIT')
+            except Exception as e:
+                log.critical(f'DB ERROR, REMINDER NOT COMMIT\n{e}')
                 await session.rollback()
-                raise web.HTTPServerError
+                return web.HTTPException()
         
         return web.HTTPFound(location='/')

@@ -9,7 +9,7 @@ from aiohttp_session.redis_storage import RedisStorage
 from database.connect import Database
 from app import setup_routes, setup_seciruty, error_middleware
 from config.config import load_config
-from utils import log, add_keys_for_request_middleware
+from utils import log, add_keys_for_request_middleware, CeleryServer
 
 def setup_templates(application: Application):
     """
@@ -50,6 +50,10 @@ def setup_app(application: Application):
     app['db'] = Database(app)
     setup_storage(application)
     setup_seciruty(application)
+
+    # application.cleanup_ctx.append(CeleryServer(application).server.start(['flower']))
+    
+
     
 app = Application(middlewares=[add_keys_for_request_middleware, error_middleware])
 args = parser_args()
@@ -62,7 +66,5 @@ if __name__ == "__main__":
     
 
  # TODO - настроить сессии что бы могли ондновременно существовать несколько юзеров
- 
+
  # TODO - добавить селери для отправки напоминаний на почту
- # TODO - сделать страницу для просмотра напоминаний
- # TODO - добавить возможность изменять свой email

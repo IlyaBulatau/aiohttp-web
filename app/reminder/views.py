@@ -48,7 +48,7 @@ async def index(request: web.Request):
                 await session.rollback()
                 return web.HTTPException()
         
-        return web.HTTPFound(location='/')
+        return web.HTTPFound(location='/reminders')
     
 @aiohttp_jinja2.template('reminders.html')
 @error_controller(template_name='reminders.html', title='Reminders List', header='You Reminders')

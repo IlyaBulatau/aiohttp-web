@@ -6,26 +6,26 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 
-async def mailing(application: web.Application, to_addres: str, reminder: Reminder):
-    """
-    Mailing reminder to user
-    """
-    mail: str = application['config']['app_mail']
-    password: str = application['config']['app_mail_password']
+# async def mailing(application: web.Application, to_addres: str, reminder: Reminder):
+#     """
+#     Mailing reminder to user
+#     """
+#     mail: str = application['config']['app_mail']
+#     password: str = application['config']['app_mail_password']
 
-    msg = MIMEMultipart()
-    msg['Subject'] = 'Reminder'
-    msg['From'] = mail
-    msg['To'] = to_addres
+#     msg = MIMEMultipart()
+#     msg['Subject'] = 'Reminder'
+#     msg['From'] = mail
+#     msg['To'] = to_addres
 
-    text = f"Hi!\nReminder for you!\n{reminder.content}"
-    part_1 = MIMEText(text, 'plain')
+#     text = f"Hi!\nReminder for you!\n{reminder.content}"
+#     part_1 = MIMEText(text, 'plain')
 
-    msg.attach(part_1)
+#     msg.attach(part_1)
     
-    async with aiosmtplib.SMTP(hostname='smtp.yandex.ru', password=587, timeout=15) as smtp:
-        await smtp.login(mail, password=password)
-        await smtp.sendmail(sender=mail, recipients=[to_addres], message=msg.as_string())
+#     async with aiosmtplib.SMTP(hostname='smtp.yandex.ru', password=587, timeout=15) as smtp:
+#         await smtp.login(mail, password=password)
+#         await smtp.sendmail(sender=mail, recipients=[to_addres], message=msg.as_string())
 
 class Mailinger:
 
@@ -47,8 +47,8 @@ class Mailinger:
     @property
     def password(self):
         return self._password
-
-    async def __call__(self, *args, **kwargs):
+    
+    async def send_email(self):
         msg = self.create_message()
 
         async with aiosmtplib.SMTP(hostname='smtp.yandex.ru', password=587, timeout=15) as smtp:

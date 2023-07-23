@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+<h1 class="element">{{ header }}</h1>
+<h2>Active</h2>
+{% if reminders_active %}
+<ul>
+    {% for reminder in reminders_active %}
+    <li class="list_active">Content: {{ reminder.content }}<p>Time departure: {{ reminder.departure_date }}</p></li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>You dont have active reminder</p>
+{% endif %}
+<h2>Later</h2>
+{% if reminders_later %}
+<ul>
+    {% for reminder in reminders_later %}
+    <li class="list_later">Content: {{ reminder.content }}<p>Time departure: {{ reminder.departure_date }}</p></li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>You dont have later reminder</p>
+{% endif %}
+<div class="menu">
+    <h3><a href="{{ app.router.get('logout').url_for() }}">Logout</a></h3>
+    <h3><a href="{{ app.router.get('index').url_for() }}">Main</a></h3>
+</div>
+{% endblock %}

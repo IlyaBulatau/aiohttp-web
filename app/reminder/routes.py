@@ -11,5 +11,6 @@ def setup_routes(application: web.Application):
     application.router.add_get('/signup', views_auth.signup, name='signup')
     application.router.add_post('/signup', views_auth.signup)
     application.router.add_get('/logout', views_auth.logout, name='logout')
+    application.router.add_get('/reminders', views.reminders, name='reminders')
 
     application.router.add_static(prefix='/static', path='static/css', name='static')

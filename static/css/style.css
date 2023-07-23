@@ -6,6 +6,19 @@ body {
     text-align: center;
 }
 
-.logout {
-    text-align: right;
+.menu {
+    float: right;
 }
+
+.list_active {
+    background: #8beb82;
+    color: darkblue;
+    margin: 5px;
+  }
+
+
+.list_later {
+    background: #f25050;
+    color: rgb(54, 54, 109);
+    margin: 5px;
+  }

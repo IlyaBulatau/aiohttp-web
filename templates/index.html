@@ -33,10 +33,10 @@
 
 </div>
 
-<div class="logout">
+<div class="menu">
 
     <h3><a href="{{ app.router.get('logout').url_for() }}">Logout</a></h3>
-
+    <h3><a href="{{ app.router.get('reminders').url_for() }}">My Reminders</a></h3>
 </div>
 
 {% endblock %}

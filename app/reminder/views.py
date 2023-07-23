@@ -1,6 +1,7 @@
 import aiohttp_jinja2
 from aiohttp import web
 from aiohttp_security import authorized_userid
+from sqlalchemy import select
 
 from utils import auth_verification, log, ReminderSaveForm
 from database.models import Reminder
@@ -48,3 +49,21 @@ async def index(request: web.Request):
                 return web.HTTPException()
         
         return web.HTTPFound(location='/')
+    
+@aiohttp_jinja2.template('reminders.html')
+@error_controller(template_name='reminders.html', title='Reminders List', header='You Reminders')
+@auth_verification
+async def reminders(request: web.Request):
+
+    user_id = int(await authorized_userid(request))
+    db: Database = request.app['db']
+
+    async with await db.session() as session:
+        query = select(Reminder).filter(Reminder.user_id == user_id)
+
+        search = await session.execute(query)
+        reminders = search.scalars().all()
+        
+    request['KEYS']['reminders_active'] = [r for r in reminders if r.departure_date > datetime.now()]
+    request['KEYS']['reminders_later'] = [r for r in reminders if r.departure_date <= datetime.now()]
+    return request['KEYS']

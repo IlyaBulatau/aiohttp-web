@@ -6,23 +6,12 @@ from database.models import User
 from database.connect import Database
 from sqlalchemy import select
 from utils import auth_verification, log, UserSignUpForm, UserLoginForm
-from app.exeption.values_exeption import (PasswordLenghtExeption,
-                PasswordLetterExeption,
-                PasswordNotHaveDigit,
-                PasswordSpaceExeption,
-                PasswordStrExeption,
-                UsernameHavePunctuationsExeption,
-                UsernameLenghtExeption,
-                UsernameSpaceExeption,
-                UsernameStrExeption)
-
-from email_validator.exceptions_types import EmailNotValidError
-
+from app.exeption.processing import error_controller
 from argon2 import PasswordHasher
 
 @aiohttp_jinja2.template('login.html')
+@error_controller(template_name='login.html', title='Login', header='Login Page')
 async def login(request: web.Request):
-    KEYS = {'title': 'Login', 'header': 'Login Page', 'password_error': None, 'email_error': None}
 
     # user auth redirect "/" page 
     if not await is_anonymous(request):
@@ -32,7 +21,7 @@ async def login(request: web.Request):
     db: Database = request.app['db']
     
     if method == 'GET':
-        return KEYS
+        return request['KEYS']
     
     elif method == 'POST':
         form_data: dict = await request.post()
@@ -40,28 +29,8 @@ async def login(request: web.Request):
         password = form_data.get('password')
 
         # validate data
-        try:
-            UserLoginForm(email=email, password=password)
-        except PasswordLenghtExeption:
-            KEYS['password_error'] = 'passport lenght need be more 8 symbols'
-            return aiohttp_jinja2.render_template('login.html', request, context=KEYS)
-        except PasswordLetterExeption:
-            KEYS['password_error'] = 'password must contain at least 4 different English letters'
-            return aiohttp_jinja2.render_template('login.html', request, context=KEYS)
-        except PasswordNotHaveDigit:
-            KEYS['password_error'] = 'password most be contain digit'
-            return aiohttp_jinja2.render_template('login.html', request, context=KEYS)
-        except PasswordSpaceExeption:
-            KEYS['password_error'] = 'password most be not have space'
-            return aiohttp_jinja2.render_template('login.html', request, context=KEYS)
-        except PasswordStrExeption:
-            KEYS['password_error'] = 'you password empty or dont have letter'
-            return aiohttp_jinja2.render_template('login.html', request, context=KEYS)
-        except Exception:
-            KEYS['email_error'] = 'email invalid'
-            return aiohttp_jinja2.render_template('login.html', request, context=KEYS)
-            
-        
+        UserLoginForm(email=email, password=password)
+
         #get user by email
         async with await db.session() as session:
             query = select(User).filter(User.email == email)
@@ -78,20 +47,20 @@ async def login(request: web.Request):
                     return web.HTTPFound(location='/')
             except:
                 log.warning('Incorrect password')
-                KEYS['password_error'] = 'Incorrect password'
-                return aiohttp_jinja2.render_template('index.html', request, context=KEYS)
+                request['KEYS']['password_error'] = 'Incorrect password'
+                return aiohttp_jinja2.render_template('login.html', request, context=request['KEYS'])
             
         # if user not found
         else:
             log.warning('user not found')
-            KEYS['email_error'] = 'user not found'
-            return aiohttp_jinja2.render_template('index.html', request, context=KEYS)
+            request['KEYS']['email_error'] = 'user not found'
+            return aiohttp_jinja2.render_template('login.html', request, context=request['KEYS'])
 
 
 
 @aiohttp_jinja2.template('signup.html')
+@error_controller(template_name='signup.html', title='SignUp', header='SignUp Page')
 async def signup(request: web.Request):
-    KEYS = {'title': 'SingUp', 'header': 'SignUp Page', 'password_error': None, 'email_error': None, 'username_error': None}
 
     method: str = request.method.upper()
     db: Database = request.app['db']
@@ -106,38 +75,7 @@ async def signup(request: web.Request):
         password = form_data.get('password')
 
         # validating data
-        try:
-            UserSignUpForm(username=username, email=email, password=password)
-        except UsernameStrExeption:
-            KEYS['username_error'] = 'user name is empty or not have letter'
-            return aiohttp_jinja2.render_template('signup.html', request, context=KEYS)
-        except UsernameLenghtExeption:
-            KEYS['username_error'] = 'username should be lenght more 1 letter'
-            return aiohttp_jinja2.render_template('signup.html', request, context=KEYS)
-        except UsernameSpaceExeption:
-            KEYS['username_error'] = 'username sould be dont have spaces'
-            return aiohttp_jinja2.render_template('login.html', request, context=KEYS)
-        except PasswordLenghtExeption:
-            KEYS['password_error'] = 'passport lenght need be more 8 symbols'
-            return aiohttp_jinja2.render_template('signup.html', request, context=KEYS)
-        except PasswordLetterExeption:
-            KEYS['password_error'] = 'password must contain at least 4 different English letters'
-            return aiohttp_jinja2.render_template('signup.html', request, context=KEYS)
-        except PasswordNotHaveDigit:
-            KEYS['password_error'] = 'password most be contain digit'
-            return aiohttp_jinja2.render_template('signup.html', request, context=KEYS)
-        except PasswordSpaceExeption:
-            KEYS['password_error'] = 'password most be not have space'
-            return aiohttp_jinja2.render_template('signup.html', request, context=KEYS)
-        except PasswordStrExeption:
-            KEYS['password_error'] = 'you password empty or dont have letter'
-            return aiohttp_jinja2.render_template('signup.html', request, context=KEYS)
-        except UsernameHavePunctuationsExeption:
-            KEYS['username_error'] = 'error you user name have punctuation symbols'
-            return aiohttp_jinja2.render_template('signup.html', request, context=KEYS)
-        except Exception:
-            KEYS['email_error'] = 'email invalid'
-            return aiohttp_jinja2.render_template('login.html', request, context=KEYS)
+        UserSignUpForm(username=username, email=email, password=password)
         
         # seacrh user with this is email
         async with await db.session() as session:
@@ -149,8 +87,8 @@ async def signup(request: web.Request):
         # if has user
         if user:
             log.warning('This is email is exist')
-            KEYS['email_error'] = 'this is email is exist'
-            return aiohttp_jinja2.render_template('signup.html', request, context=KEYS)
+            request['KEYS']['email_error'] = 'this is email is exist'
+            return aiohttp_jinja2.render_template('signup.html', request, context=request['KEYS'])
                 
         async with await db.session() as session:
             user = User(username=username, email=email, password=password)

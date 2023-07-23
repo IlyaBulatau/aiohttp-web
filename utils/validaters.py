@@ -1,7 +1,8 @@
-from aiohttp.web import HTTPFound, Request
+from aiohttp.web import HTTPFound, Request, middleware
 from aiohttp_security import is_anonymous
 import functools
 from typing import Callable
+
 
 def auth_verification(func: Callable):
     """
@@ -22,3 +23,5 @@ def auth_verification(func: Callable):
         return await func(*args, **kwargs)
     
     return wrapper
+
+

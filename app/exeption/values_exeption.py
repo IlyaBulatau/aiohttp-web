@@ -1,4 +1,13 @@
+"""
+Module for exeption objects
+Contains Base model exeption, abstactrs model and others like
+password, username, email, and content exeption model
+"""
+
 class BaseExeption(Exception):
+    """
+    Base Model
+    """
 
     def __init__(self, *args: object) -> None:
         if args:
@@ -11,15 +20,27 @@ class BaseExeption(Exception):
             return self.msg
 
 class PasswordExeption(BaseException):
+    """
+    Abstract model for password exeption
+    """
     ...
 
 class UsernameExeption(BaseException):
+    """
+    Abstract model for username exeption
+    """
     ...    
 
 class ContentExeption(BaseException):
+    """
+    Abstract model for content exeption
+    """
     ...
 
 class TimeExeption(BaseException):
+    """
+    Abstract model for timepassed exeption
+    """
     ...
 
 class EmptyDataExeption(BaseException):
@@ -83,6 +104,7 @@ class UsernameLenghtExeption(UsernameExeption):
         UsernameExeption.__str__(self)         
         return 'USERNAME IS SMALL LENGHT'
     
+
 class ContentStrExeption(ContentExeption):
 
     def __str__(self) -> str:
@@ -100,6 +122,7 @@ class ContentSpaceExeption(ContentExeption):
     def __str__(self) -> str:
         ContentExeption.__str__(self)
         return 'MORE SPACE AND LESS LETTER'
+  
     
 class TimePassedExeption(TimeExeption):
     

@@ -3,6 +3,13 @@ from aiohttp_security import is_anonymous
 import functools
 from typing import Callable
 
+KEYS = {'title': None, 
+        'header': None, 
+        'username_error': None, 
+        'password_error': None, 
+        'email_error': None, 
+        'reminder_error': None,
+        }
 
 def auth_verification(func: Callable):
     """
@@ -25,3 +32,10 @@ def auth_verification(func: Callable):
     return wrapper
 
 
+@middleware
+async def add_keys_for_request_middleware(request: Request, handler: Callable):
+    """
+    Adds all requests to KEYS, needed to transfer keys and values to html templates
+    """
+    request['KEYS'] = KEYS
+    return await handler(request)

@@ -1,6 +1,7 @@
 import functools
 import aiohttp_jinja2
 from aiohttp import web
+from typing import Callable, Any
 from app.exeption.values_exeption import (PasswordLenghtExeption,
                                         PasswordLetterExeption,
                                         PasswordNotHaveDigit,
@@ -20,31 +21,42 @@ from app.exeption.values_exeption import (PasswordLenghtExeption,
 def error_controller(template_name: str, 
                      title:str, 
                      header:str, 
-                     username_error:str=None, 
-                     password_error:str=None,
-                     email_error:str=None,
-                     reminder_error:str=None,):
+                     username_error:str | None=None, 
+                     password_error:str | None=None,
+                     email_error:str | None=None,
+                     reminder_error:str | None=None,):
+    """
+    Decorator for processing data entered from html form
 
-    def wrapper(handler):
+    : template_name - name template html
+    : title - title for html page
+    : header - header for html page
+    : *_error - error message for template html
+    """
+
+    def wrapper(handler: Callable):
 
         functools.wraps(handler)
-        async def inner(*args, **kwargs):
+        async def inner(*args: Any | web.Request, **kwargs: Any | None):
 
-            KEYS = {'title': title, 
-                    'header': header, 
-                    'username_error': username_error, 
-                    'password_error': password_error, 
-                    'email_error': email_error, 
-                    'reminder_error': reminder_error,}
             
             request: web.Request = args[0]
-            method = request.method.upper()
-            request['KEYS'] = KEYS
+            method: str = request.method.upper()
+
+            # set data in request.__dict__
+            request['KEYS']['title']: str = title
+            request['KEYS']['header']: str = header
+            request['KEYS']['username_error']: str = username_error
+            request['KEYS']['password_error']: str = password_error
+            request['KEYS']['email_error']: str = email_error
+            request['KEYS']['reminder_error']: str = reminder_error
 
             if method == 'GET':
                 return await handler(*args, **kwargs)
 
             elif method == 'POST':
+                KEYS: dict = request['KEYS']
+
                 try:
                     return await handler(*args, **kwargs)
                 #username exeption

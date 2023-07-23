@@ -1,3 +1,7 @@
+"""
+Module for validater data from html form
+"""
+
 import pydantic
 from email_validator import validate_email, exceptions_types
 from utils import log
@@ -26,6 +30,9 @@ class UserLoginForm(pydantic.BaseModel):
     @pydantic.field_validator('email')
     @classmethod
     def email_validator(cls, email):
+        """
+        EMAIL validator
+        """
         try:
             validate_email(email=email)
         except:
@@ -38,6 +45,9 @@ class UserLoginForm(pydantic.BaseModel):
     @pydantic.field_validator('password')
     @classmethod
     def password_validator(cls, password):
+        """
+        PASSWORD validator
+        """
         if not isinstance(password, str):
             log.warning('PASSWORD NOT STR TYPE')
             raise PasswordStrExeption()
@@ -63,6 +73,9 @@ class UserSignUpForm(UserLoginForm):
     @pydantic.field_validator('username')
     @classmethod
     def username_verificat(cls, username):
+        """
+        USERNAME validator
+        """
         if not isinstance(username, str):
             log.warning('USERNAME NOT STR TYPE')
             raise UsernameStrExeption()
@@ -87,6 +100,9 @@ class ReminderSaveForm(pydantic.BaseModel):
     @pydantic.field_validator('content')
     @classmethod
     def content_validator(cls, content):
+        """
+        CONTENT validator
+        """
         if not isinstance(content, str):
             log.warning('CONTENT IS NOT STRING TYPE')
             raise ContentStrExeption()
@@ -102,6 +118,9 @@ class ReminderSaveForm(pydantic.BaseModel):
     @pydantic.root_validator(pre=True)
     @classmethod
     def date_departure_validator(cls, args):
+        """
+        DATETIME validator
+        """
         date_departure = args['date_departure']
         time_departure = args['time_departure']
         if date_departure == '' or time_departure == '':

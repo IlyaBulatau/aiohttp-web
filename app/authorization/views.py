@@ -13,7 +13,7 @@ from argon2 import PasswordHasher
 @error_controller(template_name='login.html', title='Login', header='Login Page')
 async def login(request: web.Request):
 
-    # user auth redirect "/" page 
+    # if user auth - redirect "/" page 
     if not await is_anonymous(request):
         return web.HTTPFound('/')
     
@@ -24,9 +24,10 @@ async def login(request: web.Request):
         return request['KEYS']
     
     elif method == 'POST':
+        # get data from html form
         form_data: dict = await request.post()
-        email = form_data.get('email')
-        password = form_data.get('password')
+        email: str = form_data.get('email')
+        password: str = form_data.get('password')
 
         # validate data
         UserLoginForm(email=email, password=password)
@@ -43,17 +44,20 @@ async def login(request: web.Request):
             try:
                 if ph.verify(user.password, password):
                     log.warning(f'Login {user.email}')
-                    await remember(request, web.HTTPFound('/'), str(user.id))
+                    # remember current user
+                    await remember(request, web.HTTPFound('/'), str(user.id)) 
                     return web.HTTPFound(location='/')
             except:
-                log.warning('Incorrect password')
-                request['KEYS']['password_error'] = 'Incorrect password'
+                msg = 'Incorrect password'
+                log.warning(msg)
+                request['KEYS']['password_error'] = msg
                 return aiohttp_jinja2.render_template('login.html', request, context=request['KEYS'])
             
         # if user not found
         else:
-            log.warning('user not found')
-            request['KEYS']['email_error'] = 'user not found'
+            msg = 'user not found'
+            log.warning(msg)
+            request['KEYS']['email_error'] = msg
             return aiohttp_jinja2.render_template('login.html', request, context=request['KEYS'])
 
 
@@ -66,13 +70,14 @@ async def signup(request: web.Request):
     db: Database = request.app['db']
     
     if method == 'GET':
-        return {'title': 'SignUp', 'header': 'SignUp Page'}
+        return request['KEYS']
 
     elif method == 'POST':
+        # get data from html form
         form_data: dict = await request.post()
-        username = form_data.get('username')
-        email = form_data.get('email')
-        password = form_data.get('password')
+        username: str = form_data.get('username')
+        email: str = form_data.get('email')
+        password: str = form_data.get('password')
 
         # validating data
         UserSignUpForm(username=username, email=email, password=password)
@@ -80,14 +85,14 @@ async def signup(request: web.Request):
         # seacrh user with this is email
         async with await db.session() as session:
             query = select(User).filter(User.email == email)
-
             search = await session.execute(query)
             user = search.scalars().first()
         
         # if has user
         if user:
-            log.warning('This is email is exist')
-            request['KEYS']['email_error'] = 'this is email is exist'
+            msg = 'This is email is exist'
+            log.warning(msg)
+            request['KEYS']['email_error'] = msg
             return aiohttp_jinja2.render_template('signup.html', request, context=request['KEYS'])
                 
         async with await db.session() as session:
@@ -99,10 +104,12 @@ async def signup(request: web.Request):
             except:
                 await session.rollback()
                 log.critical('DB ERROR USER NOT COMMIT')
+                raise web.HTTPServerError
 
         return web.HTTPFound('/login')
 
 @auth_verification
 async def logout(request):
+    # forget currecnt user
     await forget(request, web.HTTPFound('/'))
     return web.HTTPFound('/login')

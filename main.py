@@ -9,7 +9,7 @@ from aiohttp_session.redis_storage import RedisStorage
 from database.connect import Database
 from app import setup_routes, setup_seciruty, error_middleware
 from config.config import load_config
-from utils import log
+from utils import log, add_keys_for_request_middleware
 
 def setup_templates(application: Application):
     """
@@ -51,7 +51,7 @@ def setup_app(application: Application):
     setup_storage(application)
     setup_seciruty(application)
     
-app = Application(middlewares=[error_middleware])
+app = Application(middlewares=[add_keys_for_request_middleware, error_middleware])
 args = parser_args()
 
 if __name__ == "__main__":
@@ -63,7 +63,6 @@ if __name__ == "__main__":
 
  # TODO - настроить сессии что бы могли ондновременно существовать несколько юзеров
  
- # TODO - отрефакторить шалоны, сделать 1 базовый, переписать ссылку на абстрактные, а не прямые
+ # TODO - сделать smtp операции
  # TODO - добавить селери для отправки напоминаний на почту
- # TODO - вынести переменную KEYS отдельно
  

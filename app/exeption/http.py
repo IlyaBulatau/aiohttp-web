@@ -1,9 +1,12 @@
-from aiohttp.web import HTTPException, middleware
 from aiohttp import web
 import aiohttp_jinja2
+from typing import Callable
 
-@middleware
-async def error_middleware(request: web.Request, handler):
+@web.middleware
+async def error_middleware(request: web.Request, handler: Callable):
+    """
+    This is middleware check and processing http errors
+    """
     message = None
 
     try:

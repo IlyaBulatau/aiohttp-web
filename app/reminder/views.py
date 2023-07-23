@@ -44,5 +44,6 @@ async def index(request: web.Request):
             except:
                 log.critical('DB ERROR, REMINDER NOT COMMIT')
                 await session.rollback()
+                raise web.HTTPServerError
         
         return web.HTTPFound(location='/')

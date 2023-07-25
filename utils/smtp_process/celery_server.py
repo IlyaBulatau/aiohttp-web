@@ -1,18 +1,19 @@
 from celery import Celery
-from celery.result import AsyncResult
 
 from aiohttp import web
+from config.config import load_config
 
 
-class CeleryServer:
+def make_celery():
+    """
+    Create Celery instance
+    """
+    data: dict = load_config()
+    user = data.get('rabbit_user')
+    password = data.get('rabbit_password')
+    host = data.get('rabbit_host')
+    celery = Celery(__name__, broker=f'amqp://{user}:{password}@{host}//', backend='rpc://')
 
-    def __init__(self, app: web.Application):
-        self.__app = app
-        self.__rabbit = f'amqp://{self.__app["config"]["rabbit_user"]}:{self.__app["config"]["rabbit_password"]}@{self.__app["config"]["rabbit_host"]}//'
-        self.__backend = 'rpc://'
-        self.__server = Celery('mailings', broker=self.__rabbit, backend=self.__backend)
 
-    @property
-    def server(self):
-        return self.__server
+    return celery
 

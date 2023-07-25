@@ -6,7 +6,7 @@ from sqlalchemy import select
 from utils.log import log
 from utils.schemes import ReminderSaveForm
 from utils.validaters import auth_verification
-from utils.smtp_process.smtp_service import Mailinger
+from utils.smtp_process.smtp_service import mailing
 
 from database.models import Reminder, User
 from datetime import datetime
@@ -63,8 +63,11 @@ async def index(request: web.Request):
                 await session.rollback()
 
         # create shedule task to mailing user reminder
-        await Mailinger(app=request.app, to_address=user.email, reminder=reminder).send_email()
-        
+        mailing.delay(request.app['config']['app_mail'],
+                      request.app['config']['app_mail_password'],
+                      user.email,
+                      reminder.content)
+
         log.warning(f'User by ID {user_id} create task')
         
         return web.HTTPFound(location='/reminders')
@@ -86,3 +89,4 @@ async def reminders(request: web.Request):
     request['KEYS']['reminders_active'] = [r for r in reminders if r.departure_date > datetime.now()]
     request['KEYS']['reminders_later'] = [r for r in reminders if r.departure_date <= datetime.now()]
     return request['KEYS']
+

@@ -115,7 +115,7 @@ class ContentLenghtExeption(ContentExeption):
 
     def __str__(self) -> str:
         ContentExeption.__str__(self)
-        return 'CONTETN LESS 20 LENGHT'
+        return 'CONTETN LESS 8 LENGHT'
     
 class ContentSpaceExeption(ContentExeption):
 

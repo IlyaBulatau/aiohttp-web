@@ -3,8 +3,12 @@ from aiohttp import web
 from aiohttp_security import authorized_userid
 from sqlalchemy import select
 
-from utils import auth_verification, log, ReminderSaveForm
-from database.models import Reminder
+from utils.log import log
+from utils.schemes import ReminderSaveForm
+from utils.validaters import auth_verification
+from utils.smtp_process.smtp_service import Mailinger
+
+from database.models import Reminder, User
 from datetime import datetime
 from database.connect import Database
 from app.exeption.processing import error_controller
@@ -46,7 +50,22 @@ async def index(request: web.Request):
             except Exception as e:
                 log.critical(f'DB ERROR, REMINDER NOT COMMIT\n{e}')
                 await session.rollback()
-                return web.HTTPException()
+                return aiohttp_jinja2.render_template('error.html', request, context={'status': 500, 'message': 'Sorry our server is down, please try again later'})
+        
+        #get user email
+        async with await db.session() as session:
+            query = select(User).filter(User.id == int(user_id))
+            try:
+                search = await session.execute(query)
+                user: User = search.scalars().first()
+            except Exception as e:
+                log.critical(f'DOWN DB {e}')
+                await session.rollback()
+
+        # create shedule task to mailing user reminder
+        await Mailinger(app=request.app, to_address=user.email, reminder=reminder).send_email()
+        
+        log.warning(f'User by ID {user_id} create task')
         
         return web.HTTPFound(location='/reminders')
     

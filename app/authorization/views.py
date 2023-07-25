@@ -5,7 +5,11 @@ import aiohttp_jinja2
 from database.models import User
 from database.connect import Database
 from sqlalchemy import select
-from utils import auth_verification, log, UserSignUpForm, UserLoginForm
+
+from utils.validaters import auth_verification
+from utils.schemes import UserLoginForm, UserSignUpForm
+from utils.log import log
+
 from app.exeption.processing import error_controller
 from argon2 import PasswordHasher
 
@@ -104,7 +108,7 @@ async def signup(request: web.Request):
             except:
                 await session.rollback()
                 log.critical('DB ERROR USER NOT COMMIT')
-                raise web.HTTPServerError
+                return aiohttp_jinja2.render_template('error.html', request, context={'status': 500, 'message': 'Sorry our server is down, please try again later'})
 
         return web.HTTPFound('/login')
 

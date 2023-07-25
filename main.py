@@ -9,7 +9,9 @@ from aiohttp_session.redis_storage import RedisStorage
 from database.connect import Database
 from app import setup_routes, setup_seciruty, error_middleware
 from config.config import load_config
-from utils import log, add_keys_for_request_middleware, CeleryServer
+from utils.log import log
+from utils.validaters import add_keys_for_request_middleware
+
 
 def setup_templates(application: Application):
     """
@@ -49,10 +51,7 @@ def setup_app(application: Application):
     app['cache'] = aioredis.from_url(f'redis://{app["config"]["redis_host"]}', encoding='utf-8', decode_responses=True)
     app['db'] = Database(app)
     setup_storage(application)
-    setup_seciruty(application)
-
-    # application.cleanup_ctx.append(CeleryServer(application).server.start(['flower']))
-    
+    setup_seciruty(application)    
 
     
 app = Application(middlewares=[add_keys_for_request_middleware, error_middleware])

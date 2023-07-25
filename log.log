@@ -665,3 +665,159 @@
 2023-07-23 19:16:21,350 | WARNING | RUN SERVER
 2023-07-23 19:23:58,912 | WARNING | RUN SERVER
 2023-07-23 19:24:02,038 | WARNING | User activate login in ID: 12
+2023-07-24 17:01:26,344 | WARNING | RUN SERVER
+2023-07-24 17:02:56,765 | WARNING | RUN SERVER
+2023-07-24 17:21:18,153 | WARNING | RUN SERVER
+2023-07-24 17:21:35,783 | WARNING | Login ilyabulatau@gmail.com
+2023-07-24 17:21:35,789 | WARNING | User activate login in ID: 14
+2023-07-24 17:21:50,802 | WARNING | User activate login in ID: 14
+2023-07-24 17:21:50,867 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT TEST REMINDER
+2023-07-24 17:21:50,919 | CRITICAL | DOWN DB (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedFunctionError'>: operator does not exist: integer = character varying
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.
+[SQL: SELECT users.username, users.email, users.password, users.id, users.create_time 
+FROM users 
+WHERE users.id = $1::VARCHAR]
+[parameters: ('14',)]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2023-07-24 17:22:24,722 | WARNING | RUN SERVER
+2023-07-24 17:22:27,892 | WARNING | User activate login in ID: 14
+2023-07-24 17:22:27,987 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT TEST REMINDER
+2023-07-24 17:22:28,039 | CRITICAL | DOWN DB (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedFunctionError'>: operator does not exist: integer = character varying
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.
+[SQL: SELECT users.username, users.email, users.password, users.id, users.create_time 
+FROM users 
+WHERE users.id = $1::VARCHAR]
+[parameters: ('14',)]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2023-07-24 17:22:50,262 | WARNING | User activate login in ID: 14
+2023-07-24 17:22:50,347 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT TEST REMINDER
+2023-07-24 17:22:50,398 | CRITICAL | DOWN DB (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedFunctionError'>: operator does not exist: integer = character varying
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.
+[SQL: SELECT users.username, users.email, users.password, users.id, users.create_time 
+FROM users 
+WHERE users.id = $1::VARCHAR]
+[parameters: ('14',)]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2023-07-24 17:23:01,842 | WARNING | User activate login in ID: 14
+2023-07-24 17:23:01,899 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT TEST REMINDER
+2023-07-24 17:23:01,947 | CRITICAL | DOWN DB (sqlalchemy.dialects.postgresql.asyncpg.ProgrammingError) <class 'asyncpg.exceptions.UndefinedFunctionError'>: operator does not exist: integer = character varying
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.
+[SQL: SELECT users.username, users.email, users.password, users.id, users.create_time 
+FROM users 
+WHERE users.id = $1::VARCHAR]
+[parameters: ('14',)]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+2023-07-24 17:25:01,274 | WARNING | RUN SERVER
+2023-07-24 17:25:05,068 | WARNING | User activate login in ID: 14
+2023-07-24 17:25:05,160 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT TEST REMINDER
+2023-07-24 17:25:54,262 | WARNING | User activate login in ID: 14
+2023-07-24 17:25:54,262 | WARNING | CONTETN LESS 8 LENGHT
+2023-07-24 17:26:09,530 | WARNING | User activate login in ID: 14
+2023-07-24 17:26:09,587 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT вфцвфцвфцв
+2023-07-24 17:27:02,981 | WARNING | User activate login in ID: 14
+2023-07-24 17:28:23,383 | WARNING | RUN SERVER
+2023-07-24 17:28:32,279 | WARNING | User activate login in ID: 14
+2023-07-24 17:28:32,372 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT ввввввввввввв
+2023-07-24 17:28:34,381 | WARNING | User activate login in ID: 14
+2023-07-24 17:28:34,470 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT ввввввввввввв
+2023-07-24 17:28:35,322 | WARNING | User activate login in ID: 14
+2023-07-24 17:28:35,376 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT ввввввввввввв
+2023-07-24 17:30:29,395 | WARNING | User activate login in ID: 14
+2023-07-24 17:30:40,210 | WARNING | User activate login in ID: 14
+2023-07-24 17:30:40,265 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT Hello Mi
+2023-07-24 17:31:13,558 | WARNING | User activate login in ID: 14
+2023-07-24 17:43:22,243 | WARNING | RUN SERVER
+2023-07-24 17:43:38,848 | WARNING | User activate login in ID: 14
+2023-07-24 17:43:54,787 | WARNING | User activate login in ID: 14
+2023-07-24 17:43:54,885 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT Periudic Task
+2023-07-24 17:45:17,728 | WARNING | User activate login in ID: 14
+2023-07-24 17:52:11,993 | WARNING | RUN SERVER
+2023-07-24 17:52:14,699 | WARNING | User activate login in ID: 14
+2023-07-24 17:52:15,701 | WARNING | User activate login in ID: 14
+2023-07-24 17:52:31,751 | WARNING | User activate login in ID: 14
+2023-07-24 17:52:31,849 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT HEllo world
+2023-07-24 17:54:45,842 | WARNING | User activate login in ID: 14
+2023-07-24 17:54:45,901 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT LOl go work
+2023-07-24 17:59:59,327 | WARNING | User activate login in ID: 14
+2023-07-24 18:04:54,429 | WARNING | RUN SERVER
+2023-07-24 18:04:54,541 | WARNING | User activate login in ID: 14
+2023-07-24 18:04:56,235 | WARNING | User activate login in ID: 14
+2023-07-24 18:05:00,027 | WARNING | User activate login in ID: 14
+2023-07-24 18:05:18,782 | WARNING | User activate login in ID: 14
+2023-07-24 18:05:18,916 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT Elo weqo
+2023-07-24 18:10:41,988 | WARNING | RUN SERVER
+2023-07-24 18:10:55,298 | WARNING | User activate login in ID: 14
+2023-07-24 18:10:55,416 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT ddddddddddd
+2023-07-24 18:15:13,930 | WARNING | RUN SERVER
+2023-07-24 18:15:35,433 | WARNING | User activate login in ID: 14
+2023-07-24 18:15:35,437 | WARNING | CONTETN LESS 8 LENGHT
+2023-07-24 18:15:46,591 | WARNING | User activate login in ID: 14
+2023-07-24 18:15:46,685 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT dwdqwdqwd
+2023-07-24 18:17:27,695 | WARNING | RUN SERVER
+2023-07-24 18:18:07,584 | WARNING | User activate login in ID: 14
+2023-07-24 18:18:07,674 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT ILLELQLD
+2023-07-24 18:18:44,795 | WARNING | RUN SERVER
+2023-07-24 18:20:16,616 | WARNING | RUN SERVER
+2023-07-24 18:22:12,405 | WARNING | RUN SERVER
+2023-07-24 18:22:54,534 | WARNING | User activate login in ID: 14
+2023-07-24 18:22:54,652 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT kqodpqdkqw
+2023-07-24 18:32:05,483 | WARNING | RUN SERVER
+2023-07-24 18:32:19,509 | WARNING | User activate login in ID: 14
+2023-07-24 18:32:19,606 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT dddddddddddddddddddddddddd
+2023-07-24 18:32:46,819 | WARNING | User activate login in ID: 14
+2023-07-24 18:32:46,899 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT dddddddddddddddddddddddddd
+2023-07-24 18:33:34,948 | WARNING | User activate login in ID: 14
+2023-07-24 18:35:44,997 | WARNING | RUN SERVER
+2023-07-24 18:35:48,159 | WARNING | User activate login in ID: 14
+2023-07-24 18:35:49,331 | WARNING | User activate login in ID: 14
+2023-07-24 18:35:57,915 | WARNING | User activate login in ID: 14
+2023-07-24 18:35:58,006 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT ddddddddd
+2023-07-24 18:37:57,462 | WARNING | User activate login in ID: 14
+2023-07-24 18:37:57,545 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT ddddddddd
+2023-07-24 18:39:49,256 | WARNING | RUN SERVER
+2023-07-24 18:39:51,879 | WARNING | User activate login in ID: 14
+2023-07-24 18:39:51,995 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT ddddddddd
+2023-07-24 18:41:41,698 | WARNING | RUN SERVER
+2023-07-24 18:41:54,164 | WARNING | User activate login in ID: 14
+2023-07-24 18:41:54,258 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT wadawdawd
+2023-07-24 19:03:45,303 | WARNING | RUN SERVER
+2023-07-24 19:05:43,273 | WARNING | RUN SERVER
+2023-07-24 19:12:03,710 | WARNING | RUN SERVER
+2023-07-24 19:12:15,924 | WARNING | User activate login in ID: 14
+2023-07-24 19:12:16,018 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT dwdwdddd
+2023-07-24 19:14:19,717 | WARNING | RUN SERVER
+2023-07-24 19:14:32,590 | WARNING | User activate login in ID: 14
+2023-07-24 19:14:32,680 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT wdwdwdwd
+2023-07-24 19:14:51,528 | WARNING | User activate login in ID: 14
+2023-07-24 19:14:51,609 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT wdwdwdwd
+2023-07-24 19:15:03,803 | WARNING | User activate login in ID: 14
+2023-07-24 19:15:03,864 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT awdawdawd
+2023-07-24 19:57:42,844 | WARNING | RUN SERVER
+2023-07-24 19:58:04,522 | WARNING | User activate login in ID: 14
+2023-07-24 19:58:04,620 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT popatolar
+2023-07-24 20:01:16,756 | WARNING | RUN SERVER
+2023-07-24 20:01:29,343 | WARNING | User activate login in ID: 14
+2023-07-24 20:01:29,467 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT TASK CELERY
+2023-07-24 20:01:29,605 | WARNING | User by ID 14 create task
+2023-07-24 20:03:16,512 | WARNING | RUN SERVER
+2023-07-24 20:03:20,916 | WARNING | User activate login in ID: 14
+2023-07-24 20:03:31,726 | WARNING | User activate login in ID: 14
+2023-07-24 20:03:31,843 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT REMINDER CELERU
+2023-07-24 20:03:31,931 | WARNING | User by ID 14 create task
+2023-07-24 20:09:23,949 | WARNING | RUN SERVER
+2023-07-24 20:09:48,076 | WARNING | RUN SERVER
+2023-07-24 20:09:54,281 | WARNING | User activate login in ID: 14
+2023-07-24 20:10:14,814 | WARNING | RUN SERVER
+2023-07-24 20:10:14,933 | WARNING | User activate login in ID: 14
+2023-07-24 20:14:24,222 | WARNING | User activate login in ID: 14
+2023-07-24 20:22:01,991 | WARNING | RUN SERVER
+2023-07-24 20:22:09,877 | WARNING | User activate login in ID: 14
+2023-07-24 20:22:19,063 | WARNING | User activate login in ID: 14
+2023-07-24 20:22:19,209 | CRITICAL | CREATE REMINDER IN DB WITH CONTENT a;dlam;wdawmd;ml
+2023-07-24 21:00:45,988 | WARNING | RUN SERVER
+2023-07-24 21:00:51,049 | WARNING | User activate login in ID: 14
+2023-07-24 21:01:54,737 | WARNING | RUN SERVER
+2023-07-24 21:01:55,591 | WARNING | User activate login in ID: 14
+2023-07-24 21:02:20,023 | WARNING | RUN SERVER
+2023-07-24 21:02:22,321 | WARNING | User activate login in ID: 14
+2023-07-25 17:04:22,703 | WARNING | RUN SERVER

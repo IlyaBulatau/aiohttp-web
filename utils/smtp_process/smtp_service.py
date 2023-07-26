@@ -7,8 +7,7 @@ import smtplib
 celery = make_celery()
 
 
-# @celery.task(name=__name__)
-@shared_task
+@celery.task(name=__name__)
 def mailing(mail, password, to_address: str, reminder: str):
     """
     Run mailing function

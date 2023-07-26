@@ -9,7 +9,7 @@ from utils.validaters import auth_verification
 from utils.smtp_process.smtp_service import mailing
 
 from database.models import Reminder, User
-from datetime import datetime
+from datetime import datetime, timedelta
 from database.connect import Database
 from app.exeption.processing import error_controller
 
@@ -63,15 +63,13 @@ async def index(request: web.Request):
                 await session.rollback()
 
         # create shedule task to mailing user reminder
-        # mailing.delay(request.app['config']['app_mail'],
-        #               request.app['config']['app_mail_password'],
-        #               user.email,
-        #               reminder.content)
-        mailing.apply_async(args=(request.app['config']['app_mail'],
+
+        time_before_mailing = reminder.departure_date - datetime.now()
+        mailing.apply_async((request.app['config']['app_mail'],
                       request.app['config']['app_mail_password'],
                       user.email,
                       reminder.content),
-                      eta=reminder.departure_date)
+                      countdown=int(time_before_mailing.total_seconds()))
 
         log.warning(f'User by ID {user_id} create task')
         

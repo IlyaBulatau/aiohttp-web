@@ -89,11 +89,11 @@ def error_controller(template_name: str,
                 except PasswordStrExeption:
                     KEYS['password_error'] = 'you password empty or dont have letter'
                     return aiohttp_jinja2.render_template(template_name, request, context=KEYS)
+                
+                # content exeption
                 except ContentStrExeption:
                     KEYS['reminder_error'] = 'You text in reminder is not valid'
                     return aiohttp_jinja2.render_template(template_name, request, context=KEYS)
-                
-                # content exeption
                 except ContentLenghtExeption:
                     KEYS['reminder_error'] = 'Lenght reminder text should be more 8 letter'
                     return aiohttp_jinja2.render_template(template_name, request, context=KEYS)

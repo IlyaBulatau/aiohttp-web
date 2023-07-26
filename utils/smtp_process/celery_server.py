@@ -13,7 +13,7 @@ def make_celery():
     password = data.get('rabbit_password')
     host = data.get('rabbit_host')
     celery = Celery(__name__, broker=f'amqp://{user}:{password}@{host}//', backend='rpc://')
+    celery.conf.timezone = 'Europe/Minsk' 
 
 
     return celery
-

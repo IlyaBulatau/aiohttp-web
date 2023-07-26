@@ -4,7 +4,7 @@ Module for validater data from html form
 
 import pydantic
 from email_validator import validate_email, exceptions_types
-from utils import log
+from utils.log import log
 from string import digits, ascii_lowercase, punctuation
 from datetime import datetime
 from app.exeption.values_exeption import (PasswordStrExeption, 
@@ -103,13 +103,13 @@ class ReminderSaveForm(pydantic.BaseModel):
         """
         CONTENT validator
         """
-        if not isinstance(content, str):
+        if not isinstance(content, str) or content == '':
             log.warning('CONTENT IS NOT STRING TYPE')
             raise ContentStrExeption()
         if len(content) < 8:
             log.warning('CONTETN LESS 8 LENGHT')
             raise ContentLenghtExeption()
-        if ((content.count(' ') // len(content)) * 100) > 30:
+        if ((content.count(' ') / len(content)) * 100) > 20:
             #percentage of space and letter
             log.warning('MORE SPACE AND LESS LETTER') 
             raise ContentSpaceExeption()

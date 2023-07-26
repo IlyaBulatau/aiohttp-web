@@ -63,10 +63,15 @@ async def index(request: web.Request):
                 await session.rollback()
 
         # create shedule task to mailing user reminder
-        mailing.delay(request.app['config']['app_mail'],
+        # mailing.delay(request.app['config']['app_mail'],
+        #               request.app['config']['app_mail_password'],
+        #               user.email,
+        #               reminder.content)
+        mailing.apply_async(args=(request.app['config']['app_mail'],
                       request.app['config']['app_mail_password'],
                       user.email,
-                      reminder.content)
+                      reminder.content),
+                      eta=reminder.departure_date)
 
         log.warning(f'User by ID {user_id} create task')
         

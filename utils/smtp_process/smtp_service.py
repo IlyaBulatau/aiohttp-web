@@ -1,12 +1,14 @@
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from utils.smtp_process.celery_server import make_celery
+from celery import shared_task
 import smtplib
 
 celery = make_celery()
 
 
-@celery.task(name=__name__)
+# @celery.task(name=__name__)
+@shared_task
 def mailing(mail, password, to_address: str, reminder: str):
     """
     Run mailing function

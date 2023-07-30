@@ -2,6 +2,7 @@ import functools
 import aiohttp_jinja2
 from aiohttp import web
 from typing import Callable, Any
+from email_validator.exceptions_types import EmailNotValidError
 from app.exeption.values_exeption import (PasswordLenghtExeption,
                                         PasswordLetterExeption,
                                         PasswordNotHaveDigit,
@@ -110,7 +111,7 @@ def error_controller(template_name: str,
                     return aiohttp_jinja2.render_template(template_name, request, context=KEYS)
 
                 # email exeption
-                except Exception:
+                except (EmailNotValidError, ValueError):
                     KEYS['email_error'] = 'email invalid'
                     return aiohttp_jinja2.render_template(template_name, request, context=KEYS)
 

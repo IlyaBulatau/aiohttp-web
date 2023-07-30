@@ -26,7 +26,7 @@ def parser_args():
     Задает аргументы для запуска скрпта
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument('--host', help='Host arg', default='0.0.0.0')
+    parser.add_argument('--host', help='Host arg', default='localhost')
     parser.add_argument('--port', help='Port arg', default=8080)
     parser.add_argument('--config', type=argparse.FileType(), help='read config file')
 
@@ -60,10 +60,8 @@ args = parser_args()
 if __name__ == "__main__":
     setup_app(app)
     log.warning('RUN SERVER')
-    run_app(app, host=args.host, port=args.port)
+    run_app(app)
     log.warning('STOP SERVER')
     
 
  # TODO - настроить сессии что бы могли ондновременно существовать несколько юзеров
-
- # TODO - добавить селери для отправки напоминаний на почту

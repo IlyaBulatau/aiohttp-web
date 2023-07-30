@@ -1,0 +1,52 @@
+version: '3.7'
+services:
+
+  reminder:
+    build: .
+    ports: 
+      - '8333:8080'
+    command: bash -c "alembic stamp head && alembic upgrade head && python main.py --config config/product.yaml"
+    container_name: reminder_app
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:14-alpine
+    ports: 
+     - '5433:5432'
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+    - postgres_data_sql:/var/lib/postgres_sql/data
+
+  redis:
+    image: redis:alpine
+    command: redis-server
+
+  rabbit:
+    image: rabbitmq
+    hostname: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBIT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBIT_PASSWORD}
+    ports: 
+      - '5673:5672'
+
+  celery:
+    build: .
+    container_name: celer_app
+    ports:
+      - '9999:8080'
+    command: bash -c "celery -A utils.smtp_process.smtp_service worker --loglevel=info"
+    volumes:
+      - .:/app
+    links:
+    - rabbit
+    depends_on:
+      - rabbit
+      
+  
+volumes:
+  postgres_data_sql:

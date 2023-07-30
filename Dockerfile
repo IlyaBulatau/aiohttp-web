@@ -8,4 +8,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY ./ ./
 
-CMD ["python", "main.py", "--config", "config/product.yaml"]
+CMD ["python", "main.py"]

@@ -11,7 +11,7 @@ from database.models import Base
 from config.config import load_config
 
 conf = load_config()
-URL = f'postgresql+asyncpg://{conf.get("database_login")}:{conf.get("database_password")}@{conf.get("database_host")}:{conf.get("database_port")}/{conf.get("database_name")}'
+URL = f'postgresql+asyncpg://{conf.get("database_login")}:{conf.get("database_password")}@{conf.get("database_host")}/{conf.get("database_name")}'
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config

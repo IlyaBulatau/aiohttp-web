@@ -1,0 +1,19 @@
+app_port: 8080
+app_host: 'localhost'
+
+database_server: 'postgres'
+database_login: 'postgres'
+database_password: 'postgres'
+database_name: 'postgres'
+database_port: '5432'
+database_host: 'postgres'
+
+redis_host: 'redis'
+
+rabbit_user: 'rabbit'
+rabbit_password: 'rabbit'
+rabbit_host: 'rabbit'
+rabbit_port: '5672'
+
+app_mail: 'example@gmail.com'
+app_mail_password: 'example'

@@ -26,8 +26,8 @@ def parser_args():
     Задает аргументы для запуска скрпта
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument('--host', help='Host arg', default='localhost')
-    parser.add_argument('--port', help='Port arg', default=8080)
+    parser.add_argument('--host', help='Host arg')
+    parser.add_argument('--port', help='Port arg')
     parser.add_argument('--config', type=argparse.FileType(), help='read config file')
 
     return parser.parse_args()

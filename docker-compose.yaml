@@ -3,9 +3,8 @@ services:
 
   reminder:
     build: .
-    ports: 
+    ports:
       - '8333:8080'
-    command: bash -c "alembic stamp head && alembic upgrade head && python main.py --config config/product.yaml"
     container_name: reminder_app
     depends_on:
       - postgres
@@ -27,7 +26,7 @@ services:
 
   rabbit:
     image: rabbitmq
-    hostname: rabbitmq
+    hostname: rabbit
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBIT_USER}
       - RABBITMQ_DEFAULT_PASS=${RABBIT_PASSWORD}
@@ -46,6 +45,20 @@ services:
     - rabbit
     depends_on:
       - rabbit
+  
+  celery_flower:
+    build: .
+    container_name: flower_app
+    ports:
+      - '5555:5555'
+    command: bash -c "celery -A utils.smtp_process.smtp_service flower --loglevel=info"
+    volumes:
+      - .:/app
+    links:
+    - rabbit
+    depends_on:
+      - rabbit
+      - celery
       
   
 volumes:
